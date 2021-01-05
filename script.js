@@ -9,22 +9,23 @@ let appleXCoordinate = Math.floor(Math.random() * 381) + 10;
 let appleYCoordinate = Math.floor(Math.random() * 381) + 10;
 let snakeHeadOrigin = [ snakeXOrigin, snakeYOrigin ];
 
+let snakeBodyCoordinates = [ [ 50, 100 ], [ 39, 100 ], [ 28, 100 ], [ 17, 100 ] ];
+
 setInterval(function() {
 	canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 
-	drawSnakeChain(4);
+	drawSnakeChain();
 	// moveSnake();
 	moveSnakeHead();
 
 	placeApple();
 }, framesPerSecond);
 
-function drawSnakeChain(snakeBodyLength) {
+function drawSnakeChain() {
 	canvasContext.beginPath();
-	canvasContext.rect(snakeXOrigin, snakeYOrigin, 10, 10);
-	// for (let i = 1; i <= snakeBodyLength; i++) {
-	// 	canvasContext.rect(snakeHeadOrigin[0] - 11 * i, snakeHeadOrigin[1], 10, 10);
-	// }
+	snakeBodyCoordinates.forEach((coordinate) => {
+		canvasContext.rect(coordinate[0], coordinate[1], 10, 10);
+	});
 	canvasContext.fillStyle = 'red';
 	canvasContext.fill();
 	canvasContext.closePath();
@@ -75,7 +76,9 @@ function keyUpHandler(e) {
 
 function moveSnakeHead() {
 	if (rightArrowPressed) {
-		snakeXOrigin += 10;
+		snakeBodyCoordinates.unshift([ snakeBodyCoordinates[0][0] + 11, snakeBodyCoordinates[0][1] ]);
+		snakeBodyCoordinates.pop();
+		console.log(snakeBodyCoordinates);
 	}
 	if (leftArrowPressed) {
 		snakeXOrigin -= 10;
