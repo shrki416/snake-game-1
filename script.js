@@ -1,23 +1,18 @@
 let canvas = document.getElementById('gameCanvas');
 let canvasContext = canvas.getContext('2d');
-let canvasWidth = 400;
-let canvasHeight = 400;
 let framesPerSecond = 1000 / 10;
-let snakeXOrigin = 50;
-let snakeYOrigin = 100;
+
 let appleXCoordinate = Math.floor(Math.random() * 381) + 10;
 let appleYCoordinate = Math.floor(Math.random() * 381) + 10;
-let snakeHeadOrigin = [ snakeXOrigin, snakeYOrigin ];
 
-let snakeBodyCoordinates = [ [ 50, 100 ], [ 39, 100 ], [ 28, 100 ], [ 17, 100 ] ];
+let snakeBodyCoordinates = [ [ 50, 200 ], [ 39, 200 ], [ 28, 200 ], [ 17, 200 ] ];
+let currentSnakeDirection = 'right';
 
 setInterval(function() {
 	canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-
 	drawSnakeChain();
-	// moveSnake();
-	moveSnakeHead();
-
+	changeSnakeDirection();
+	moveSnake();
 	placeApple();
 }, framesPerSecond);
 
@@ -29,10 +24,6 @@ function drawSnakeChain() {
 	canvasContext.fillStyle = 'red';
 	canvasContext.fill();
 	canvasContext.closePath();
-}
-
-function moveSnake() {
-	snakeHeadOrigin[0] += 10;
 }
 
 //KeyEvent Handler
@@ -74,20 +65,50 @@ function keyUpHandler(e) {
 	}
 }
 
-function moveSnakeHead() {
+function changeSnakeDirection() {
 	if (rightArrowPressed) {
 		snakeBodyCoordinates.unshift([ snakeBodyCoordinates[0][0] + 11, snakeBodyCoordinates[0][1] ]);
 		snakeBodyCoordinates.pop();
+		currentSnakeDirection = 'right';
 		console.log(snakeBodyCoordinates);
 	}
 	if (leftArrowPressed) {
-		snakeXOrigin -= 10;
+		snakeBodyCoordinates.unshift([ snakeBodyCoordinates[0][0] - 11, snakeBodyCoordinates[0][1] ]);
+		snakeBodyCoordinates.pop();
+		currentSnakeDirection = 'left';
+
+		console.log(snakeBodyCoordinates);
 	}
 	if (upArrowPressed) {
-		snakeYOrigin -= 10;
+		snakeBodyCoordinates.unshift([ snakeBodyCoordinates[0][0], snakeBodyCoordinates[0][1] - 11 ]);
+		snakeBodyCoordinates.pop();
+		currentSnakeDirection = 'up';
+		console.log(snakeBodyCoordinates);
 	}
 	if (downArrowPressed) {
-		snakeYOrigin += 10;
+		snakeBodyCoordinates.unshift([ snakeBodyCoordinates[0][0], snakeBodyCoordinates[0][1] + 11 ]);
+		snakeBodyCoordinates.pop();
+		currentSnakeDirection = 'down';
+		console.log(snakeBodyCoordinates);
+	}
+}
+
+function moveSnake() {
+	if (currentSnakeDirection === 'right') {
+		snakeBodyCoordinates.unshift([ snakeBodyCoordinates[0][0] + 11, snakeBodyCoordinates[0][1] ]);
+		snakeBodyCoordinates.pop();
+	}
+	if (currentSnakeDirection === 'left') {
+		snakeBodyCoordinates.unshift([ snakeBodyCoordinates[0][0] - 11, snakeBodyCoordinates[0][1] ]);
+		snakeBodyCoordinates.pop();
+	}
+	if (currentSnakeDirection === 'up') {
+		snakeBodyCoordinates.unshift([ snakeBodyCoordinates[0][0], snakeBodyCoordinates[0][1] - 11 ]);
+		snakeBodyCoordinates.pop();
+	}
+	if (currentSnakeDirection === 'down') {
+		snakeBodyCoordinates.unshift([ snakeBodyCoordinates[0][0], snakeBodyCoordinates[0][1] + 11 ]);
+		snakeBodyCoordinates.pop();
 	}
 }
 
