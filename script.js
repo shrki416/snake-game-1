@@ -159,6 +159,13 @@ function moveApple() {
 
 		appleXCoordinate = (Math.floor(Math.random() * 38) + 1) * 10;
 		appleYCoordinate = (Math.floor(Math.random() * 38) + 1) * 10;
+		//spple coordinate same as snake body coordinate
+		snakeBodyCoordinates.forEach((coordinate) => {
+			if (coordinate[0] === appleXCoordinate && coordinate[1] === appleYCoordinate) {
+				appleXCoordinate = (Math.floor(Math.random() * 38) + 1) * 10;
+				appleYCoordinate = (Math.floor(Math.random() * 38) + 1) * 10;
+			}
+		});
 		updateScore();
 	}
 }
@@ -191,24 +198,28 @@ function snakeEdgeDetection() {
 		console.log('Touched top edge!');
 		console.log(snakeBodyCoordinates);
 		clearInterval(snakeGamePlay);
+		document.querySelector('#game-over').style.visibility = 'visible';
 	}
 	//touch bottom edge
 	if (snakeBodyCoordinates[0][1] + snakeStepSize > 400) {
 		console.log('Touched bottom edge!');
 		console.log(snakeBodyCoordinates);
 		clearInterval(snakeGamePlay);
+		document.querySelector('#game-over').style.visibility = 'visible';
 	}
 	//touch right edge
 	if (snakeBodyCoordinates[0][0] + snakeStepSize > 400) {
 		console.log('Touched right edge!');
 		console.log(snakeBodyCoordinates);
 		clearInterval(snakeGamePlay);
+		document.querySelector('#game-over').style.visibility = 'visible';
 	}
 	//touch left edge
 	if (snakeBodyCoordinates[0][0] - snakeStepSize < -10) {
 		console.log('Touched left edge!');
 		console.log(snakeBodyCoordinates);
 		clearInterval(snakeGamePlay);
+		document.querySelector('#game-over').style.visibility = 'visible';
 	}
 	//touch snake body
 	snakeBodyCoordinates.slice(1).forEach((coordinate) => {
@@ -216,6 +227,7 @@ function snakeEdgeDetection() {
 			console.log('Snake touched itself');
 			console.log(snakeBodyCoordinates);
 			clearInterval(snakeGamePlay);
+			document.querySelector('#game-over').style.visibility = 'visible';
 		}
 	});
 }

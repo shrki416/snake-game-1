@@ -14,6 +14,19 @@
 	border-right: 10px solid blue;
 }
 
+#game-over {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: auto;
+	position: absolute;
+	margin-top: 200px;
+	width: 100px;
+	height: 60px;
+	background-color: whitesmoke;
+	visibility: hidden;
+}
+
 .header {
 	display: flex;
 	background-color: blue;
