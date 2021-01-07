@@ -20,6 +20,7 @@
 	height: 60px;
 	width: 420px;
 	align-items: center;
+	color: whitesmoke;
 }
 
 h1 {
@@ -30,9 +31,11 @@ h1 {
 	margin-right: 50px;
 }
 
-#semi-colon {
+#semi-colon,
+#score-display {
 	font-size: 24px;
 }
 i {
 	margin-top: 5px;
+	padding-right: 3px;
 }

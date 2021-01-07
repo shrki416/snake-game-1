@@ -59,6 +59,7 @@ function drawSnakeChain() {
 
 function changeSnakeDirection() {
 	if (rightArrowPressed && currentSnakeDirection != 'right' && currentSnakeDirection != 'left') {
+		// if (rightArrowPressed) {
 		snakeBodyCoordinates.unshift([ snakeBodyCoordinates[0][0] + snakeStepSize, snakeBodyCoordinates[0][1] ]);
 		snakeBodyCoordinates.pop();
 		currentSnakeDirection = 'right';
@@ -67,6 +68,7 @@ function changeSnakeDirection() {
 		rightArrowPressed = false;
 	}
 	if (leftArrowPressed && currentSnakeDirection != 'right' && currentSnakeDirection != 'left') {
+		// if (leftArrowPressed) {
 		snakeBodyCoordinates.unshift([ snakeBodyCoordinates[0][0] - snakeStepSize, snakeBodyCoordinates[0][1] ]);
 		snakeBodyCoordinates.pop();
 		currentSnakeDirection = 'left';
@@ -76,6 +78,7 @@ function changeSnakeDirection() {
 		leftArrowPressed = false;
 	}
 	if (upArrowPressed && currentSnakeDirection != 'up' && currentSnakeDirection != 'down') {
+		// if (upArrowPressed) {
 		snakeBodyCoordinates.unshift([ snakeBodyCoordinates[0][0], snakeBodyCoordinates[0][1] - snakeStepSize ]);
 		snakeBodyCoordinates.pop();
 		currentSnakeDirection = 'up';
@@ -84,6 +87,7 @@ function changeSnakeDirection() {
 		upArrowPressed = false;
 	}
 	if (downArrowPressed && currentSnakeDirection != 'up' && currentSnakeDirection != 'down') {
+		// if (downArrowPressed) {
 		snakeBodyCoordinates.unshift([ snakeBodyCoordinates[0][0], snakeBodyCoordinates[0][1] + snakeStepSize ]);
 		snakeBodyCoordinates.pop();
 		currentSnakeDirection = 'down';
@@ -206,6 +210,14 @@ function snakeEdgeDetection() {
 		console.log(snakeBodyCoordinates);
 		clearInterval(snakeGamePlay);
 	}
+	//touch snake body
+	snakeBodyCoordinates.slice(1).forEach((coordinate) => {
+		if (coordinate[0] === snakeBodyCoordinates[0][0] && coordinate[1] === snakeBodyCoordinates[0][1]) {
+			console.log('Snake touched itself');
+			console.log(snakeBodyCoordinates);
+			clearInterval(snakeGamePlay);
+		}
+	});
 }
 
 let snakeGamePlay = setInterval(draw, framesPerSecond);
