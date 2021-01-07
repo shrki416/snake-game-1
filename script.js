@@ -155,7 +155,17 @@ function moveApple() {
 
 		appleXCoordinate = (Math.floor(Math.random() * 38) + 1) * 10;
 		appleYCoordinate = (Math.floor(Math.random() * 38) + 1) * 10;
+		updateScore();
 	}
+}
+
+function updateScore() {
+	let scorePlaceHolder = document.querySelector('#score-display');
+	let scoreValue = parseInt(document.querySelector('#score-display').textContent);
+	// if (snakeBodyCoordinates[0][0] === appleXCoordinate && snakeBodyCoordinates[0][1] === appleYCoordinate) {
+	scorePlaceHolder.textContent = scoreValue += 1;
+	console.log(scoreValue);
+	// }
 }
 
 function draw() {
