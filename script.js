@@ -58,7 +58,7 @@ function drawSnakeChain() {
 }
 
 function changeSnakeDirection() {
-	if (rightArrowPressed) {
+	if (rightArrowPressed && currentSnakeDirection != 'right' && currentSnakeDirection != 'left') {
 		snakeBodyCoordinates.unshift([ snakeBodyCoordinates[0][0] + snakeStepSize, snakeBodyCoordinates[0][1] ]);
 		snakeBodyCoordinates.pop();
 		currentSnakeDirection = 'right';
@@ -66,7 +66,7 @@ function changeSnakeDirection() {
 		isKeyPressed = true;
 		rightArrowPressed = false;
 	}
-	if (leftArrowPressed) {
+	if (leftArrowPressed && currentSnakeDirection != 'right' && currentSnakeDirection != 'left') {
 		snakeBodyCoordinates.unshift([ snakeBodyCoordinates[0][0] - snakeStepSize, snakeBodyCoordinates[0][1] ]);
 		snakeBodyCoordinates.pop();
 		currentSnakeDirection = 'left';
@@ -75,7 +75,7 @@ function changeSnakeDirection() {
 		isKeyPressed = true;
 		leftArrowPressed = false;
 	}
-	if (upArrowPressed) {
+	if (upArrowPressed && currentSnakeDirection != 'up' && currentSnakeDirection != 'down') {
 		snakeBodyCoordinates.unshift([ snakeBodyCoordinates[0][0], snakeBodyCoordinates[0][1] - snakeStepSize ]);
 		snakeBodyCoordinates.pop();
 		currentSnakeDirection = 'up';
@@ -83,7 +83,7 @@ function changeSnakeDirection() {
 		isKeyPressed = true;
 		upArrowPressed = false;
 	}
-	if (downArrowPressed) {
+	if (downArrowPressed && currentSnakeDirection != 'up' && currentSnakeDirection != 'down') {
 		snakeBodyCoordinates.unshift([ snakeBodyCoordinates[0][0], snakeBodyCoordinates[0][1] + snakeStepSize ]);
 		snakeBodyCoordinates.pop();
 		currentSnakeDirection = 'down';
@@ -146,6 +146,13 @@ function drawApple() {
 function moveApple() {
 	if (snakeBodyCoordinates[0][0] === appleXCoordinate && snakeBodyCoordinates[0][1] === appleYCoordinate) {
 		console.log('Snake ate the Apple!');
+		let snakeLength = snakeBodyCoordinates.length - 1;
+		//add to snake body
+		if (currentSnakeDirection === 'right' || currentSnakeDirection === 'left')
+			snakeBodyCoordinates.push([ snakeBodyCoordinates[0][0] - 10, snakeBodyCoordinates[0][1] ]);
+		if (currentSnakeDirection === 'up' || currentSnakeDirection === 'down')
+			snakeBodyCoordinates.push([ snakeBodyCoordinates[0][0], snakeBodyCoordinates[0][1] - 10 ]);
+
 		appleXCoordinate = (Math.floor(Math.random() * 38) + 1) * 10;
 		appleYCoordinate = (Math.floor(Math.random() * 38) + 1) * 10;
 	}
