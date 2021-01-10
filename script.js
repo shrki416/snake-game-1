@@ -1,6 +1,6 @@
 const canvas = document.getElementById('gameCanvas');
 const canvasContext = canvas.getContext('2d');
-const framesPerSecond = 1000 / 100;
+const framesPerSecond = 10;
 let snakeBodyCoordinates = [ [ 50, 200 ], [ 40, 200 ], [ 30, 200 ], [ 20, 200 ] ];
 let currentSnakeDirection = '';
 
