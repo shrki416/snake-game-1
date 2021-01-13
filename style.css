@@ -1,3 +1,7 @@
+html,
+body {
+	background: #d7dde8;
+}
 .container {
 	display: flex;
 	flex-direction: column;
@@ -6,34 +10,67 @@
 }
 
 #gameCanvas {
-	background-color: black;
+	background-color: whitesmoke;
 	width: 400px;
 	height: 400px;
-	border-bottom: 10px solid blue;
-	border-left: 10px solid blue;
-	border-right: 10px solid blue;
+	border-bottom: 1px solid #5f6368;
+	border-left: 1px solid #5f6368;
+	border-right: 1px solid #5f6368;
 }
 
 #game-over {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	margin-top: auto;
+	/* margin-top: auto; */
 	position: absolute;
-	margin-top: 200px;
+	margin-left: 150px;
+	margin-right: 150px;
+	margin-top: 230px;
 	width: 100px;
 	height: 60px;
+	border: 1px solid #5f6368;
+	border-radius: 1rem;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 	background-color: whitesmoke;
+
 	visibility: hidden;
+}
+
+.card {
+	display: flex;
+	flex-direction: column;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+	border-radius: 1rem;
+
+	font-family: 'Roboto', sans-serif;
 }
 
 .header {
 	display: flex;
-	background-color: blue;
+	background-color: whitesmoke;
 	height: 60px;
-	width: 420px;
+	width: 400px;
+	border: 1px solid #5f6368;
 	align-items: center;
-	color: whitesmoke;
+	color: black;
+	border-top-left-radius: 1rem;
+	border-top-right-radius: 1rem;
+}
+.game-description {
+	display: flex;
+	background-color: whitesmoke;
+	justify-content: center;
+	width: 400px;
+	border-bottom: 1px solid #5f6368;
+	border-left: 1px solid #5f6368;
+	border-right: 1px solid #5f6368;
+	border-bottom-left-radius: 1rem;
+	border-bottom-right-radius: 1rem;
+}
+
+.game-description > p {
+	padding: 5px 20px;
 }
 
 h1 {
@@ -50,5 +87,7 @@ h1 {
 }
 i {
 	margin-top: 5px;
-	padding-right: 3px;
+	padding-right: 4px;
+	color: tomato;
+	font-size: 1.3rem;
 }

@@ -4,20 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./style.css">
     <title>Snake Game</title>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Snake Game</h1>
-            <div class="score">
-                <i class="fas fa-circle"></i><span id="semi-colon">:</span> <span id="score-display">0</span>
+        <div class="card">
+            <div class="header">
+                <h1>Snake Game</h1>
+                <div class="score">
+                    <i class="fas fa-circle"></i><span id="semi-colon">:</span> <span id="score-display">0</span>
+                </div>
+            </div>
+            <div id="game-over">Game Over</div>
+            <canvas id="gameCanvas" width="400" height="400"></canvas>
+            <div class="game-description">
+                <p>Use the arrow keys to move the snake around the game area. Collect as many apples as you can without touching the edges or the snake itself.</p>
             </div>
         </div>
-        <div id="game-over">Game Over</div>
-        <canvas id="gameCanvas" width="400" height="400"></canvas>
+        
     </div>
+    
     <script src="./script.js"></script>
 </body>
 </html>
