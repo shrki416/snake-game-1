@@ -161,8 +161,12 @@ const isGameOver = () => {
 	}
 };
 
-const snakeGame = () => {
+const refreshCanvas = () => {
 	canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+};
+
+const snakeGame = () => {
+	refreshCanvas();
 	drawApple();
 	moveSnake(snake.direction);
 	snakeEatsApple();
