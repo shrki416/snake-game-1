@@ -130,7 +130,7 @@ const snakeEatsApple = () => {
 	}
 };
 
-const endGame = () => {
+const isGameOver = () => {
 	let isGameOver = false;
 	const isTouchingTopEdge = Boolean(snake.bodyCoordinates[0][1] <= -10);
 	const isTouchingBottomEdge = Boolean(snake.bodyCoordinates[0][1] >= 400);
@@ -159,13 +159,14 @@ const endGame = () => {
 		document.querySelector('#game-over').style.visibility = 'visible';
 	}
 };
+
 const snakeGame = () => {
 	canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 	drawApple();
 	moveSnake(snake.direction);
 	snakeEatsApple();
 	drawSnake();
-	endGame();
+	isGameOver();
 };
 
 const framesPerSecond = 100;
