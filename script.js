@@ -7,30 +7,30 @@ document.addEventListener('keyup', keyUpHandler);
 
 function keyDownHandler(e) {
 	const inputArrowKey = e.key.toLowerCase();
-	validateDirection(inputArrowKey);
+	validateDirectionInput(inputArrowKey);
 }
 function keyUpHandler() {
 	isArrowPressed = false;
 }
 
-function validateDirection(inputArrowKey) {
+function validateDirectionInput(inputDirection) {
 	const horizontalDirection = [ 'arrowleft', 'arrowright' ];
 	const verticalDirection = [ 'arrowup', 'arrowdown' ];
 	const availableSnakeDirections = verticalDirection.includes(snake.direction)
 		? horizontalDirection
 		: verticalDirection;
-	const isValidSnakeDirection = availableSnakeDirections.includes(inputArrowKey) ? true : false;
-	const isValidFirstMove = snake.direction === '' && horizontalDirection[0] === inputArrowKey ? false : true;
-	if (!horizontalDirection.includes(inputArrowKey) && !verticalDirection.includes(inputArrowKey)) {
+	if (!horizontalDirection.includes(inputDirection) && !verticalDirection.includes(inputDirection)) {
 		return;
 	}
+	const isValidFirstMove = snake.direction === '' && 'arrowleft' != inputDirection ? true : false;
 	if (!isArrowPressed && isValidFirstMove) {
 		isArrowPressed = true;
-		snake.direction = inputArrowKey;
+		snake.direction = inputDirection;
 	}
+	const isValidSnakeDirection = availableSnakeDirections.includes(inputDirection) ? true : false;
 	if (!isArrowPressed && isValidSnakeDirection) {
 		isArrowPressed = true;
-		snake.direction = inputArrowKey;
+		snake.direction = inputDirection;
 	}
 }
 
@@ -129,28 +129,25 @@ function snakeEatsApple() {
 
 function endGame() {
 	let isGameOver = false;
-	//touch top edge
-	if (snake.bodyCoordinates[0][1] <= -10) {
-		isGameOver = true;
+	const isTouchingTopEdge = Boolean(snake.bodyCoordinates[0][1] <= -10);
+	const isTouchingBottomEdge = Boolean(snake.bodyCoordinates[0][1] >= 400);
+	const isTouchingLeftEdge = Boolean(snake.bodyCoordinates[0][0] <= -10);
+	const isTouchingRightEdge = Boolean(snake.bodyCoordinates[0][0] >= 400);
+	const isTouchingEdge = [ isTouchingTopEdge, isTouchingBottomEdge, isTouchingRightEdge, isTouchingLeftEdge ];
+
+	for (let i = 0; i < isTouchingEdge.length; i++) {
+		if (isTouchingEdge[i]) {
+			isGameOver = true;
+			break;
+		}
 	}
-	// 	//touch bottom edge
-	if (snake.bodyCoordinates[0][1] >= 400) {
-		isGameOver = true;
-	}
-	// 	//touch right edge
-	if (snake.bodyCoordinates[0][0] >= 400) {
-		isGameOver = true;
-	}
-	// 	//touch left edge
-	if (snake.bodyCoordinates[0][0] <= -10) {
-		isGameOver = true;
-	}
-	// 	//touch snake body
+
 	for (let i = 1; i < snake.length; i++) {
-		if (
+		const isSnakeTouchingSelf = Boolean(
 			snake.bodyCoordinates[i][0] === snake.bodyCoordinates[0][0] &&
-			snake.bodyCoordinates[i][1] === snake.bodyCoordinates[0][1]
-		) {
+				snake.bodyCoordinates[i][1] === snake.bodyCoordinates[0][1]
+		);
+		if (isSnakeTouchingSelf) {
 			isGameOver = true;
 			break;
 		}
