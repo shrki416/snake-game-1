@@ -48,7 +48,7 @@ for (let i = 1; i < snake.length; i++) {
 
 function drawSnake() {
 	canvasContext.beginPath();
-	snake.bodyCoordinates = [ ...snake.bodyCoordinates.slice(0, snake.length) ];
+	snake.bodyCoordinates = snake.bodyCoordinates.slice(0, snake.length);
 	snake.bodyCoordinates.forEach((coordinate) => {
 		canvasContext.rect(coordinate[0], coordinate[1], snake.bodySize, snake.bodySize);
 	});
