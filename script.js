@@ -1,38 +1,36 @@
-const canvas = document.getElementById('gameCanvas');
-const canvasContext = canvas.getContext('2d');
-
 let isArrowPressed = false;
-document.addEventListener('keydown', keyDownHandler);
-document.addEventListener('keyup', keyUpHandler);
-
-function keyDownHandler(e) {
-	const inputArrowKey = e.key.toLowerCase();
-	validateDirectionInput(inputArrowKey);
-}
-function keyUpHandler() {
-	isArrowPressed = false;
-}
-
-function validateDirectionInput(inputDirection) {
+const validateKeyInput = (inputKey) => {
 	const horizontalDirection = [ 'arrowleft', 'arrowright' ];
 	const verticalDirection = [ 'arrowup', 'arrowdown' ];
+	if (!horizontalDirection.includes(inputKey) && !verticalDirection.includes(inputKey)) {
+		return;
+	}
+	const isValidFirstMove = snake.direction === '' && 'arrowleft' != inputKey ? true : false;
+	if (!isArrowPressed && isValidFirstMove) {
+		isArrowPressed = true;
+		snake.direction = inputKey;
+	}
 	const availableSnakeDirections = verticalDirection.includes(snake.direction)
 		? horizontalDirection
 		: verticalDirection;
-	if (!horizontalDirection.includes(inputDirection) && !verticalDirection.includes(inputDirection)) {
-		return;
-	}
-	const isValidFirstMove = snake.direction === '' && 'arrowleft' != inputDirection ? true : false;
-	if (!isArrowPressed && isValidFirstMove) {
-		isArrowPressed = true;
-		snake.direction = inputDirection;
-	}
-	const isValidSnakeDirection = availableSnakeDirections.includes(inputDirection) ? true : false;
+	const isValidSnakeDirection = availableSnakeDirections.includes(inputKey) ? true : false;
 	if (!isArrowPressed && isValidSnakeDirection) {
 		isArrowPressed = true;
-		snake.direction = inputDirection;
+		snake.direction = inputKey;
 	}
-}
+};
+const keyDownHandler = (e) => {
+	const inputKey = e.key.toLowerCase();
+	validateKeyInput(inputKey);
+};
+const keyUpHandler = () => {
+	isArrowPressed = false;
+};
+document.addEventListener('keydown', keyDownHandler);
+document.addEventListener('keyup', keyUpHandler);
+
+const canvas = document.getElementById('gameCanvas');
+const canvasContext = canvas.getContext('2d');
 
 const snake = {
 	bodyCoordinates: [ [ 80, 200 ] ],
@@ -42,11 +40,15 @@ const snake = {
 	length: 5
 };
 
-for (let i = 1; i < snake.length; i++) {
-	snake.bodyCoordinates.push([ snake.bodyCoordinates[0][0] - i * snake.bodySize, snake.bodyCoordinates[0][1] ]);
-}
+const buildInitialSnakeBody = (length) => {
+	for (let i = 1; i < length; i++) {
+		snake.bodyCoordinates.push([ snake.bodyCoordinates[0][0] - i * snake.bodySize, snake.bodyCoordinates[0][1] ]);
+	}
+};
 
-function drawSnake() {
+buildInitialSnakeBody(snake.length);
+
+const drawSnake = () => {
 	canvasContext.beginPath();
 	snake.bodyCoordinates = snake.bodyCoordinates.slice(0, snake.length);
 	snake.bodyCoordinates.forEach((coordinate) => {
@@ -55,9 +57,20 @@ function drawSnake() {
 	canvasContext.fillStyle = '#76b852';
 	canvasContext.fill();
 	canvasContext.closePath();
-}
+};
 
-function randomAppleCoordinates() {
+const moveSnake = (arrowDirection) => {
+	const snakeMoves = {
+		arrowright: [ snake.bodyCoordinates[0][0] + snake.stepSize, snake.bodyCoordinates[0][1] ],
+		arrowleft: [ snake.bodyCoordinates[0][0] - snake.stepSize, snake.bodyCoordinates[0][1] ],
+		arrowup: [ snake.bodyCoordinates[0][0], snake.bodyCoordinates[0][1] - snake.stepSize ],
+		arrowdown: [ snake.bodyCoordinates[0][0], snake.bodyCoordinates[0][1] + snake.stepSize ]
+	};
+
+	arrowDirection ? snake.bodyCoordinates.unshift(snakeMoves[arrowDirection]) : null;
+};
+
+const randomAppleCoordinates = () => {
 	let isEmptyCoordinate = false;
 	let appleCoordinates = [];
 	do {
@@ -76,13 +89,14 @@ function randomAppleCoordinates() {
 	} while (!isEmptyCoordinate);
 
 	return appleCoordinates;
-}
+};
 
 const apple = {
 	coordinates: randomAppleCoordinates(),
 	radius: 7
 };
-function drawApple() {
+
+const drawApple = () => {
 	canvasContext.beginPath();
 	canvasContext.fillStyle = 'tomato';
 	canvasContext.arc(
@@ -94,30 +108,19 @@ function drawApple() {
 	);
 	canvasContext.fill();
 	canvasContext.closePath();
-}
+};
 
-function moveApple() {
+const moveApple = () => {
 	apple.coordinates = randomAppleCoordinates();
-}
+};
 
-function updateScore() {
+const updateScore = () => {
 	const scorePlaceHolder = document.querySelector('#score-display');
 	let scoreValue = parseInt(document.querySelector('#score-display').textContent);
 	scorePlaceHolder.textContent = scoreValue += 1;
-}
+};
 
-function moveSnake(arrowDirection) {
-	const snakeMoves = {
-		arrowright: [ snake.bodyCoordinates[0][0] + snake.stepSize, snake.bodyCoordinates[0][1] ],
-		arrowleft: [ snake.bodyCoordinates[0][0] - snake.stepSize, snake.bodyCoordinates[0][1] ],
-		arrowup: [ snake.bodyCoordinates[0][0], snake.bodyCoordinates[0][1] - snake.stepSize ],
-		arrowdown: [ snake.bodyCoordinates[0][0], snake.bodyCoordinates[0][1] + snake.stepSize ]
-	};
-
-	arrowDirection ? snake.bodyCoordinates.unshift(snakeMoves[arrowDirection]) : null;
-}
-
-function snakeEatsApple() {
+const snakeEatsApple = () => {
 	const isAppleEatten =
 		snake.bodyCoordinates[0][0] == apple.coordinates[0] && snake.bodyCoordinates[0][1] === apple.coordinates[1];
 	if (isAppleEatten) {
@@ -125,9 +128,9 @@ function snakeEatsApple() {
 		updateScore();
 		snake.length += 1;
 	}
-}
+};
 
-function endGame() {
+const endGame = () => {
 	let isGameOver = false;
 	const isTouchingTopEdge = Boolean(snake.bodyCoordinates[0][1] <= -10);
 	const isTouchingBottomEdge = Boolean(snake.bodyCoordinates[0][1] >= 400);
@@ -155,15 +158,15 @@ function endGame() {
 		clearInterval(snakeGamePlay);
 		document.querySelector('#game-over').style.visibility = 'visible';
 	}
-}
-function snakeGame() {
+};
+const snakeGame = () => {
 	canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 	drawApple();
 	moveSnake(snake.direction);
 	snakeEatsApple();
 	drawSnake();
 	endGame();
-}
+};
 
 const framesPerSecond = 100;
 const snakeGamePlay = setInterval(snakeGame, framesPerSecond);
