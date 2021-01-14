@@ -133,13 +133,11 @@ function endGame() {
 	const isTouchingBottomEdge = Boolean(snake.bodyCoordinates[0][1] >= 400);
 	const isTouchingLeftEdge = Boolean(snake.bodyCoordinates[0][0] <= -10);
 	const isTouchingRightEdge = Boolean(snake.bodyCoordinates[0][0] >= 400);
-	const isTouchingEdge = [ isTouchingTopEdge, isTouchingBottomEdge, isTouchingRightEdge, isTouchingLeftEdge ];
-
-	for (let i = 0; i < isTouchingEdge.length; i++) {
-		if (isTouchingEdge[i]) {
-			isGameOver = true;
-			break;
-		}
+	const isTouchingEdge = ![ isTouchingTopEdge, isTouchingBottomEdge, isTouchingRightEdge, isTouchingLeftEdge ].every(
+		(edgeCondition) => edgeCondition === false
+	);
+	if (isTouchingEdge) {
+		isGameOver = true;
 	}
 
 	for (let i = 1; i < snake.length; i++) {
