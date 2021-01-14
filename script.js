@@ -40,13 +40,13 @@ const snake = {
 	length: 5
 };
 
-const buildInitialSnakeBody = (length) => {
+const appendInitialSnakeBodyCoordinates = (length) => {
 	for (let i = 1; i < length; i++) {
 		snake.bodyCoordinates.push([ snake.bodyCoordinates[0][0] - i * snake.bodySize, snake.bodyCoordinates[0][1] ]);
 	}
 };
 
-buildInitialSnakeBody(snake.length);
+appendInitialSnakeBodyCoordinates(snake.length);
 
 const drawSnake = () => {
 	canvasContext.beginPath();
@@ -60,11 +60,12 @@ const drawSnake = () => {
 };
 
 const moveSnake = (arrowDirection) => {
+	const snakeHead = snake.bodyCoordinates[0];
 	const snakeMoves = {
-		arrowright: [ snake.bodyCoordinates[0][0] + snake.stepSize, snake.bodyCoordinates[0][1] ],
-		arrowleft: [ snake.bodyCoordinates[0][0] - snake.stepSize, snake.bodyCoordinates[0][1] ],
-		arrowup: [ snake.bodyCoordinates[0][0], snake.bodyCoordinates[0][1] - snake.stepSize ],
-		arrowdown: [ snake.bodyCoordinates[0][0], snake.bodyCoordinates[0][1] + snake.stepSize ]
+		arrowright: [ snakeHead[0] + snake.stepSize, snakeHead[1] ],
+		arrowleft: [ snakeHead[0] - snake.stepSize, snakeHead[1] ],
+		arrowup: [ snakeHead[0], snakeHead[1] - snake.stepSize ],
+		arrowdown: [ snakeHead[0], snakeHead[1] + snake.stepSize ]
 	};
 
 	arrowDirection ? snake.bodyCoordinates.unshift(snakeMoves[arrowDirection]) : null;
@@ -121,8 +122,8 @@ const updateScore = () => {
 };
 
 const snakeEatsApple = () => {
-	const isAppleEatten =
-		snake.bodyCoordinates[0][0] == apple.coordinates[0] && snake.bodyCoordinates[0][1] === apple.coordinates[1];
+	const snakeHead = snake.bodyCoordinates[0];
+	const isAppleEatten = snakeHead[0] == apple.coordinates[0] && snakeHead[1] === apple.coordinates[1];
 	if (isAppleEatten) {
 		moveApple();
 		updateScore();
@@ -131,11 +132,12 @@ const snakeEatsApple = () => {
 };
 
 const isGameOver = () => {
+	const snakeHead = snake.bodyCoordinates[0];
 	let isGameOver = false;
-	const isTouchingTopEdge = Boolean(snake.bodyCoordinates[0][1] <= -10);
-	const isTouchingBottomEdge = Boolean(snake.bodyCoordinates[0][1] >= 400);
-	const isTouchingLeftEdge = Boolean(snake.bodyCoordinates[0][0] <= -10);
-	const isTouchingRightEdge = Boolean(snake.bodyCoordinates[0][0] >= 400);
+	const isTouchingTopEdge = Boolean(snakeHead[1] <= -10);
+	const isTouchingBottomEdge = Boolean(snakeHead[1] >= 400);
+	const isTouchingLeftEdge = Boolean(snakeHead[0] <= -10);
+	const isTouchingRightEdge = Boolean(snakeHead[0] >= 400);
 	const isTouchingEdge = ![ isTouchingTopEdge, isTouchingBottomEdge, isTouchingRightEdge, isTouchingLeftEdge ].every(
 		(edgeCondition) => edgeCondition === false
 	);
@@ -145,8 +147,7 @@ const isGameOver = () => {
 
 	for (let i = 1; i < snake.length; i++) {
 		const isSnakeTouchingSelf = Boolean(
-			snake.bodyCoordinates[i][0] === snake.bodyCoordinates[0][0] &&
-				snake.bodyCoordinates[i][1] === snake.bodyCoordinates[0][1]
+			snake.bodyCoordinates[i][0] === snakeHead[0] && snake.bodyCoordinates[i][1] === snakeHead[1]
 		);
 		if (isSnakeTouchingSelf) {
 			isGameOver = true;
