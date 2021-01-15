@@ -103,7 +103,7 @@ const moveSnake = (snakeDirection) => {
 
 const randomAppleCoordinates = () => {
 	let isEmptyCoordinate = false;
-	let appleCoordinates = [];
+	let appleCoordinates = {};
 	do {
 		appleCoordinates = { x: Math.floor(Math.random() * 40) * 10, y: Math.floor(Math.random() * 40) * 10 };
 		for (let i = 0; i < snake.length; i++) {
@@ -161,31 +161,33 @@ const snakeEatsApple = () => {
 	}
 };
 
-const isGameOver = () => {
-	let isGameOver = false;
-	const isTouchingTopEdge = Boolean(snake.headCoordinates.y <= -10);
-	const isTouchingBottomEdge = Boolean(snake.headCoordinates.y >= 400);
-	const isTouchingLeftEdge = Boolean(snake.headCoordinates.x <= -10);
-	const isTouchingRightEdge = Boolean(snake.headCoordinates.x >= 400);
+const snakeBoundryDetection = () => {
+	const isTouchingTopEdge = Boolean(snake.headCoordinates.y <= -snake.stepSize);
+	const isTouchingBottomEdge = Boolean(snake.headCoordinates.y >= canvas.height);
+	const isTouchingLeftEdge = Boolean(snake.headCoordinates.x <= -snake.stepSize);
+	const isTouchingRightEdge = Boolean(snake.headCoordinates.x >= canvas.width);
 	const isTouchingEdge = ![ isTouchingTopEdge, isTouchingBottomEdge, isTouchingRightEdge, isTouchingLeftEdge ].every(
 		(edgeCondition) => edgeCondition === false
 	);
 	if (isTouchingEdge) {
-		isGameOver = true;
+		return true;
 	}
+};
 
+const snakeBodyDetection = () => {
 	for (let i = 1; i < snake.length; i++) {
 		const isSnakeTouchingSelf = Boolean(
 			snake.bodyCoordinates[i].x === snake.headCoordinates.x &&
 				snake.bodyCoordinates[i].y === snake.headCoordinates.y
 		);
 		if (isSnakeTouchingSelf) {
-			isGameOver = true;
-			break;
+			return true;
 		}
 	}
+};
 
-	if (isGameOver) {
+const isGameOver = () => {
+	if (snakeBodyDetection() || snakeBoundryDetection()) {
 		clearInterval(snakeGameInterval);
 		document.querySelector('#game-over').style.visibility = 'visible';
 	}
