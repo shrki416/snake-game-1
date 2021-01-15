@@ -190,7 +190,7 @@ const snakeBodyDetection = () => {
 	}
 };
 
-const isGameOver = () => {
+const gameOver = () => {
 	if (snakeBodyDetection() || snakeBoundryDetection()) {
 		clearInterval(snakeGameInterval);
 		document.querySelector('#game-over').style.visibility = 'visible';
@@ -208,7 +208,7 @@ const snakeGameLoop = () => {
 	snake.headCoordinates = currentSnakeHeadCoordinates();
 	snakeEatsApple();
 	draw(snakeCanvasElement);
-	isGameOver();
+	gameOver();
 };
 
 const framesPerSecond = 10;
