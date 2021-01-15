@@ -1,27 +1,35 @@
 let isArrowPressed = false;
 
-const validateDirectionInput = (inputArrowKey) => {
-	const horizontalArrows = [ 'arrowleft', 'arrowright' ];
-	const verticalArrows = [ 'arrowup', 'arrowdown' ];
-	const isValidFirstMove = snake.direction === '' && 'arrowleft' != inputArrowKey ? true : false;
+const validateDirectionInput = (inputSnakeDirection) => {
+	const horizontalDirection = [ 'left', 'right' ];
+	const verticalDirection = [ 'up', 'down' ];
+	const isValidFirstMove = snake.direction === '' && 'left' != inputSnakeDirection ? true : false;
 	if (!isArrowPressed && isValidFirstMove) {
 		isArrowPressed = true;
-		snake.direction = inputArrowKey;
+		snake.direction = inputSnakeDirection;
 		return;
 	}
-	const availableSnakeDirections = verticalArrows.includes(snake.direction) ? horizontalArrows : verticalArrows;
-	const isValidSnakeDirection = availableSnakeDirections.includes(inputArrowKey) ? true : false;
+	const availableSnakeDirections = verticalDirection.includes(snake.direction)
+		? horizontalDirection
+		: verticalDirection;
+	const isValidSnakeDirection = availableSnakeDirections.includes(inputSnakeDirection) ? true : false;
 	if (!isArrowPressed && isValidSnakeDirection) {
 		isArrowPressed = true;
-		snake.direction = inputArrowKey;
+		snake.direction = inputSnakeDirection;
 	}
 };
 
 const keyDownHandler = (e) => {
 	const inputKey = e.key.toLowerCase();
+	const mapKeyToSnakeDirection = {
+		arrowleft: 'left',
+		arrowright: 'right',
+		arrowup: 'up',
+		arrowdown: 'down'
+	};
 	const validKeyInputs = [ 'arrowleft', 'arrowright', 'arrowup', 'arrowdown' ];
 	if (!validKeyInputs.includes(inputKey)) return;
-	validateDirectionInput(inputKey);
+	validateDirectionInput(mapKeyToSnakeDirection[inputKey]);
 };
 const keyUpHandler = () => {
 	isArrowPressed = false;
@@ -33,7 +41,7 @@ const canvas = document.getElementById('gameCanvas');
 const canvasContext = canvas.getContext('2d');
 
 const snake = {
-	bodyCoordinates: [ [ 80, 200 ] ],
+	bodyCoordinates: [ { x: 80, y: 200 } ],
 	direction: '',
 	stepSize: 10,
 	bodySize: 10,
@@ -42,7 +50,10 @@ const snake = {
 
 const appendInitialSnakeBodyCoordinates = (length) => {
 	for (let i = 1; i < length; i++) {
-		snake.bodyCoordinates.push([ snake.bodyCoordinates[0][0] - i * snake.bodySize, snake.bodyCoordinates[0][1] ]);
+		snake.bodyCoordinates.push({
+			x: snake.bodyCoordinates[0].x - i * snake.bodySize,
+			y: snake.bodyCoordinates[0].y
+		});
 	}
 };
 
@@ -52,7 +63,7 @@ const drawSnake = () => {
 	canvasContext.beginPath();
 	snake.bodyCoordinates = snake.bodyCoordinates.slice(0, snake.length);
 	snake.bodyCoordinates.forEach((coordinate) => {
-		canvasContext.rect(coordinate[0], coordinate[1], snake.bodySize, snake.bodySize);
+		canvasContext.rect(coordinate.x, coordinate.y, snake.bodySize, snake.bodySize);
 	});
 	canvasContext.fillStyle = '#76b852';
 	canvasContext.fill();
@@ -61,30 +72,30 @@ const drawSnake = () => {
 
 const moveSnakeRight = () => {
 	const snakeHead = snake.bodyCoordinates[0];
-	return [ snakeHead[0] + snake.stepSize, snakeHead[1] ];
+	return { x: snakeHead.x + snake.stepSize, y: snakeHead.y };
 };
 
 const moveSnakeLeft = () => {
 	const snakeHead = snake.bodyCoordinates[0];
-	return [ snakeHead[0] - snake.stepSize, snakeHead[1] ];
+	return { x: snakeHead.x - snake.stepSize, y: snakeHead.y };
 };
 
 const moveSnakeUp = () => {
 	const snakeHead = snake.bodyCoordinates[0];
-	return [ snakeHead[0], snakeHead[1] - snake.stepSize ];
+	return { x: snakeHead.x, y: snakeHead.y - snake.stepSize };
 };
 
 const moveSnakeDown = () => {
 	const snakeHead = snake.bodyCoordinates[0];
-	return [ snakeHead[0], snakeHead[1] + snake.stepSize ];
+	return { x: snakeHead.x, y: snakeHead.y + snake.stepSize };
 };
 
 const moveSnake = (snakeDirection) => {
 	const snakeMoves = {
-		arrowright: moveSnakeRight(),
-		arrowleft: moveSnakeLeft(),
-		arrowup: moveSnakeUp(),
-		arrowdown: moveSnakeDown()
+		right: moveSnakeRight(),
+		left: moveSnakeLeft(),
+		up: moveSnakeUp(),
+		down: moveSnakeDown()
 	};
 
 	snakeDirection ? snake.bodyCoordinates.unshift(snakeMoves[snakeDirection]) : null;
@@ -94,11 +105,11 @@ const randomAppleCoordinates = () => {
 	let isEmptyCoordinate = false;
 	let appleCoordinates = [];
 	do {
-		appleCoordinates = [ Math.floor(Math.random() * 40) * 10, Math.floor(Math.random() * 40) * 10 ];
+		appleCoordinates = { x: Math.floor(Math.random() * 40) * 10, y: Math.floor(Math.random() * 40) * 10 };
 		for (let i = 0; i < snake.length; i++) {
 			if (
-				snake.bodyCoordinates[i][0] === appleCoordinates[0] &&
-				snake.bodyCoordinates[i][1] === appleCoordinates[1]
+				snake.bodyCoordinates[i][0] === appleCoordinates.x &&
+				snake.bodyCoordinates[i][1] === appleCoordinates.y
 			) {
 				isEmptyCoordinate = false;
 				break;
@@ -120,8 +131,8 @@ const drawApple = () => {
 	canvasContext.beginPath();
 	canvasContext.fillStyle = 'tomato';
 	canvasContext.arc(
-		apple.coordinates[0] + snake.bodySize / 2,
-		apple.coordinates[1] + snake.bodySize / 2,
+		apple.coordinates.x + snake.bodySize / 2,
+		apple.coordinates.y + snake.bodySize / 2,
 		apple.radius,
 		0,
 		Math.PI * 2
@@ -142,7 +153,7 @@ const updateScore = () => {
 
 const snakeEatsApple = () => {
 	const snakeHead = snake.bodyCoordinates[0];
-	const isAppleEatten = snakeHead[0] == apple.coordinates[0] && snakeHead[1] === apple.coordinates[1];
+	const isAppleEatten = snakeHead.x == apple.coordinates.x && snakeHead.y === apple.coordinates.y;
 	if (isAppleEatten) {
 		moveApple();
 		updateScore();
@@ -153,10 +164,10 @@ const snakeEatsApple = () => {
 const isGameOver = () => {
 	const snakeHead = snake.bodyCoordinates[0];
 	let isGameOver = false;
-	const isTouchingTopEdge = Boolean(snakeHead[1] <= -10);
-	const isTouchingBottomEdge = Boolean(snakeHead[1] >= 400);
-	const isTouchingLeftEdge = Boolean(snakeHead[0] <= -10);
-	const isTouchingRightEdge = Boolean(snakeHead[0] >= 400);
+	const isTouchingTopEdge = Boolean(snakeHead.y <= -10);
+	const isTouchingBottomEdge = Boolean(snakeHead.y >= 400);
+	const isTouchingLeftEdge = Boolean(snakeHead.x <= -10);
+	const isTouchingRightEdge = Boolean(snakeHead.x >= 400);
 	const isTouchingEdge = ![ isTouchingTopEdge, isTouchingBottomEdge, isTouchingRightEdge, isTouchingLeftEdge ].every(
 		(edgeCondition) => edgeCondition === false
 	);
@@ -166,7 +177,7 @@ const isGameOver = () => {
 
 	for (let i = 1; i < snake.length; i++) {
 		const isSnakeTouchingSelf = Boolean(
-			snake.bodyCoordinates[i][0] === snakeHead[0] && snake.bodyCoordinates[i][1] === snakeHead[1]
+			snake.bodyCoordinates[i].x === snakeHead.x && snake.bodyCoordinates[i].y === snakeHead.y
 		);
 		if (isSnakeTouchingSelf) {
 			isGameOver = true;
