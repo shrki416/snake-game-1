@@ -213,5 +213,6 @@ const snakeGameLoop = () => {
 	isGameOver();
 };
 
-const framesPerMillisecond = 1000 / 10;
-const snakeGameInterval = setInterval(snakeGameLoop, framesPerMillisecond);
+const framesPerSecond = 10;
+const intervalMilliseconds = 1000 / framesPerSecond;
+const snakeGameInterval = setInterval(snakeGameLoop, intervalMilliseconds);
