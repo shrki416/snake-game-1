@@ -53,6 +53,12 @@ const snake = {
 	length: 5
 };
 
+const currentSnakeHeadCoordinates = () => {
+	return snake.bodyCoordinates[0];
+};
+
+snake.headCoordinates = currentSnakeHeadCoordinates();
+
 const appendInitialSnakeBodyCoordinates = (length) => {
 	for (let i = 1; i < length; i++) {
 		snake.bodyCoordinates.push({
@@ -73,23 +79,19 @@ const snakeCanvasElement = () => {
 };
 
 const moveSnakeRight = () => {
-	const snakeHead = snake.bodyCoordinates[0];
-	return { x: snakeHead.x + snake.stepSize, y: snakeHead.y };
+	return { x: snake.headCoordinates.x + snake.stepSize, y: snake.headCoordinates.y };
 };
 
 const moveSnakeLeft = () => {
-	const snakeHead = snake.bodyCoordinates[0];
-	return { x: snakeHead.x - snake.stepSize, y: snakeHead.y };
+	return { x: snake.headCoordinates.x - snake.stepSize, y: snake.headCoordinates.y };
 };
 
 const moveSnakeUp = () => {
-	const snakeHead = snake.bodyCoordinates[0];
-	return { x: snakeHead.x, y: snakeHead.y - snake.stepSize };
+	return { x: snake.headCoordinates.x, y: snake.headCoordinates.y - snake.stepSize };
 };
 
 const moveSnakeDown = () => {
-	const snakeHead = snake.bodyCoordinates[0];
-	return { x: snakeHead.x, y: snakeHead.y + snake.stepSize };
+	return { x: snake.headCoordinates.x, y: snake.headCoordinates.y + snake.stepSize };
 };
 
 const moveSnake = (snakeDirection) => {
@@ -197,10 +199,6 @@ const isGameOver = () => {
 
 const refreshCanvas = () => {
 	canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-};
-
-const currentSnakeHeadCoordinates = () => {
-	return snake.bodyCoordinates[0];
 };
 
 const snakeGameLoop = () => {
