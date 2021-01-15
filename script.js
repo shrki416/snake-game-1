@@ -152,8 +152,8 @@ const updateScore = () => {
 };
 
 const snakeEatsApple = () => {
-	const snakeHead = snake.bodyCoordinates[0];
-	const isAppleEatten = snakeHead.x == apple.coordinates.x && snakeHead.y === apple.coordinates.y;
+	const isAppleEatten =
+		snake.headCoordinates.x == apple.coordinates.x && snake.headCoordinates.y === apple.coordinates.y;
 	if (isAppleEatten) {
 		moveApple();
 		updateScore();
@@ -162,12 +162,11 @@ const snakeEatsApple = () => {
 };
 
 const isGameOver = () => {
-	const snakeHead = snake.bodyCoordinates[0];
 	let isGameOver = false;
-	const isTouchingTopEdge = Boolean(snakeHead.y <= -10);
-	const isTouchingBottomEdge = Boolean(snakeHead.y >= 400);
-	const isTouchingLeftEdge = Boolean(snakeHead.x <= -10);
-	const isTouchingRightEdge = Boolean(snakeHead.x >= 400);
+	const isTouchingTopEdge = Boolean(snake.headCoordinates.y <= -10);
+	const isTouchingBottomEdge = Boolean(snake.headCoordinates.y >= 400);
+	const isTouchingLeftEdge = Boolean(snake.headCoordinates.x <= -10);
+	const isTouchingRightEdge = Boolean(snake.headCoordinates.x >= 400);
 	const isTouchingEdge = ![ isTouchingTopEdge, isTouchingBottomEdge, isTouchingRightEdge, isTouchingLeftEdge ].every(
 		(edgeCondition) => edgeCondition === false
 	);
@@ -177,7 +176,8 @@ const isGameOver = () => {
 
 	for (let i = 1; i < snake.length; i++) {
 		const isSnakeTouchingSelf = Boolean(
-			snake.bodyCoordinates[i].x === snakeHead.x && snake.bodyCoordinates[i].y === snakeHead.y
+			snake.bodyCoordinates[i].x === snake.headCoordinates.x &&
+				snake.bodyCoordinates[i].y === snake.headCoordinates.y
 		);
 		if (isSnakeTouchingSelf) {
 			isGameOver = true;
@@ -186,7 +186,7 @@ const isGameOver = () => {
 	}
 
 	if (isGameOver) {
-		clearInterval(snakeGamePlay);
+		clearInterval(snakeGameInterval);
 		document.querySelector('#game-over').style.visibility = 'visible';
 	}
 };
@@ -195,14 +195,19 @@ const refreshCanvas = () => {
 	canvasContext.clearRect(0, 0, canvas.width, canvas.height);
 };
 
-const snakeGame = () => {
+const currentSnakeHeadCoordinates = () => {
+	return snake.bodyCoordinates[0];
+};
+
+const snakeGameLoop = () => {
 	refreshCanvas();
 	drawApple();
 	moveSnake(snake.direction);
+	snake.headCoordinates = currentSnakeHeadCoordinates();
 	snakeEatsApple();
 	drawSnake();
 	isGameOver();
 };
 
 const framesPerSecond = 100;
-const snakeGamePlay = setInterval(snakeGame, framesPerSecond);
+const snakeGameInterval = setInterval(snakeGameLoop, framesPerSecond);
