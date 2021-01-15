@@ -93,14 +93,14 @@ const moveSnakeDown = () => {
 };
 
 const moveSnake = (snakeDirection) => {
-	const snakeMoves = {
+	const mapSnakeMoves = {
 		right: moveSnakeRight(),
 		left: moveSnakeLeft(),
 		up: moveSnakeUp(),
 		down: moveSnakeDown()
 	};
 
-	snakeDirection ? snake.bodyCoordinates.unshift(snakeMoves[snakeDirection]) : null;
+	snakeDirection ? snake.bodyCoordinates.unshift(mapSnakeMoves[snakeDirection]) : null;
 };
 
 const randomAppleCoordinates = () => {
@@ -110,8 +110,8 @@ const randomAppleCoordinates = () => {
 		appleCoordinates = { x: Math.floor(Math.random() * 40) * 10, y: Math.floor(Math.random() * 40) * 10 };
 		for (let i = 0; i < snake.length; i++) {
 			if (
-				snake.bodyCoordinates[i][0] === appleCoordinates.x &&
-				snake.bodyCoordinates[i][1] === appleCoordinates.y
+				snake.bodyCoordinates[i].x === appleCoordinates.x &&
+				snake.bodyCoordinates[i].y === appleCoordinates.y
 			) {
 				isEmptyCoordinate = false;
 				break;
