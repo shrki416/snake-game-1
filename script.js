@@ -1,25 +1,27 @@
 let isArrowPressed = false;
-const validateKeyInput = (inputKey) => {
-	const horizontalDirection = [ 'arrowleft', 'arrowright' ];
-	const verticalDirection = [ 'arrowup', 'arrowdown' ];
-	if (!horizontalDirection.includes(inputKey) && !verticalDirection.includes(inputKey)) return;
-	const isValidFirstMove = snake.direction === '' && 'arrowleft' != inputKey ? true : false;
+
+const validateDirectionInput = (inputArrowKey) => {
+	const horizontalArrows = [ 'arrowleft', 'arrowright' ];
+	const verticalArrows = [ 'arrowup', 'arrowdown' ];
+	const isValidFirstMove = snake.direction === '' && 'arrowleft' != inputArrowKey ? true : false;
 	if (!isArrowPressed && isValidFirstMove) {
 		isArrowPressed = true;
-		snake.direction = inputKey;
+		snake.direction = inputArrowKey;
+		return;
 	}
-	const availableSnakeDirections = verticalDirection.includes(snake.direction)
-		? horizontalDirection
-		: verticalDirection;
-	const isValidSnakeDirection = availableSnakeDirections.includes(inputKey) ? true : false;
+	const availableSnakeDirections = verticalArrows.includes(snake.direction) ? horizontalArrows : verticalArrows;
+	const isValidSnakeDirection = availableSnakeDirections.includes(inputArrowKey) ? true : false;
 	if (!isArrowPressed && isValidSnakeDirection) {
 		isArrowPressed = true;
-		snake.direction = inputKey;
+		snake.direction = inputArrowKey;
 	}
 };
+
 const keyDownHandler = (e) => {
 	const inputKey = e.key.toLowerCase();
-	validateKeyInput(inputKey);
+	const validKeyInputs = [ 'arrowleft', 'arrowright', 'arrowup', 'arrowdown' ];
+	if (!validKeyInputs.includes(inputKey)) return;
+	validateDirectionInput(inputKey);
 };
 const keyUpHandler = () => {
 	isArrowPressed = false;
