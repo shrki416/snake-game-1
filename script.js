@@ -2,9 +2,7 @@ let isArrowPressed = false;
 const validateKeyInput = (inputKey) => {
 	const horizontalDirection = [ 'arrowleft', 'arrowright' ];
 	const verticalDirection = [ 'arrowup', 'arrowdown' ];
-	if (!horizontalDirection.includes(inputKey) && !verticalDirection.includes(inputKey)) {
-		return;
-	}
+	if (!horizontalDirection.includes(inputKey) && !verticalDirection.includes(inputKey)) return;
 	const isValidFirstMove = snake.direction === '' && 'arrowleft' != inputKey ? true : false;
 	if (!isArrowPressed && isValidFirstMove) {
 		isArrowPressed = true;
@@ -59,16 +57,35 @@ const drawSnake = () => {
 	canvasContext.closePath();
 };
 
-const moveSnake = (arrowDirection) => {
+const moveSnakeRight = () => {
 	const snakeHead = snake.bodyCoordinates[0];
+	return [ snakeHead[0] + snake.stepSize, snakeHead[1] ];
+};
+
+const moveSnakeLeft = () => {
+	const snakeHead = snake.bodyCoordinates[0];
+	return [ snakeHead[0] - snake.stepSize, snakeHead[1] ];
+};
+
+const moveSnakeUp = () => {
+	const snakeHead = snake.bodyCoordinates[0];
+	return [ snakeHead[0], snakeHead[1] - snake.stepSize ];
+};
+
+const moveSnakeDown = () => {
+	const snakeHead = snake.bodyCoordinates[0];
+	return [ snakeHead[0], snakeHead[1] + snake.stepSize ];
+};
+
+const moveSnake = (snakeDirection) => {
 	const snakeMoves = {
-		arrowright: [ snakeHead[0] + snake.stepSize, snakeHead[1] ],
-		arrowleft: [ snakeHead[0] - snake.stepSize, snakeHead[1] ],
-		arrowup: [ snakeHead[0], snakeHead[1] - snake.stepSize ],
-		arrowdown: [ snakeHead[0], snakeHead[1] + snake.stepSize ]
+		arrowright: moveSnakeRight(),
+		arrowleft: moveSnakeLeft(),
+		arrowup: moveSnakeUp(),
+		arrowdown: moveSnakeDown()
 	};
 
-	arrowDirection ? snake.bodyCoordinates.unshift(snakeMoves[arrowDirection]) : null;
+	snakeDirection ? snake.bodyCoordinates.unshift(snakeMoves[snakeDirection]) : null;
 };
 
 const randomAppleCoordinates = () => {
